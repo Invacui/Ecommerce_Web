@@ -8,7 +8,6 @@ function App() {
     <div className='text-grey-600'>
     <Header/>
     <Home/>
-
     </div>
   );
 }
