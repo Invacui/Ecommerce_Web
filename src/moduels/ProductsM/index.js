@@ -1,10 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
-import * as productImage from '../../Drawables/Products';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { items } from '../../components/Products/items'; // Import the items array
-
-const Login = () => {
+import { useCartContext } from '../../context/cart_context';
+import Cart from '../Cart';
+const ProductM = ({product}) => {
+  const { cart } = useCartContext();
+  console.log(
+    "🚀 Winner Winner Nigger Dinner",cart)
+  const {AddToCart} = useCartContext();
   const { itemId } = useParams();
   const item = items.find((item) => item.id === parseInt(itemId));
 
@@ -12,6 +15,7 @@ const Login = () => {
     return <div>Item not found</div>;
   }
   return (
+
     <section className="text-gray-600 body-font overflow-hidden">
     <div className="container px-5 py-24 mx-auto">
       <div className="lg:w-4/5 mx-auto flex flex-wrap">
@@ -56,9 +60,9 @@ const Login = () => {
             <span className="title-font font-medium text-2xl text-gray-900">
             {item.price}
             </span>
-            <button className="flex ml-auto text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded">
+            <Link to={`/cart-details`} className="flex ml-auto text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded" onClick={() =>AddToCart(item.id,item.category,item.name,item.price,item.image,item)}>
               Add To Cart
-            </button>
+            </Link>
             <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
               <svg
                 fill="currentColor"
@@ -85,4 +89,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ProductM

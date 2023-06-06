@@ -1,7 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react';
 import imb from '../../Drawables/LSI/L.jpg';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
+    const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [PassWord,setPassWord]= useState('');
+
+    const loginUser = async (e) =>{
+        e.preventDefault();
+        console.log('loginUser function called');
+        const res = await fetch('/login',{
+            method:"POST",
+            headers:{
+                "Content-Type" : "application/json"
+            },
+            body:JSON.stringify({
+                    email,PassWord
+            }),
+        });
+        
+        const data = await res.json();
+
+      if (res.status === 400 || !data) {
+        window.alert('Login Failed');
+        console.log('Opps! Failed to SignUp');
+      } else {
+        window.alert('Login Successful');
+        console.log('Success! SignUp');
+        navigate('/');
+      }
+    }
     return (
         <div className="container m-auto overflow-hidden">
             <div hidden="" className="fixed inset-0 w-7/12 lg:block">
@@ -63,25 +92,30 @@ const Login = () => {
                             Or
                         </span>
                     </div>
-                    <form action="" className="space-y-6 py-6">
+                    <form method='POST' className="space-y-6 py-6">
                         <div>
                             <input
                                 type="email"
                                 placeholder="Your Email"
+                                value={email}
                                 className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div className="flex flex-col items-start">
                             <input
                                 type="password"
+                                value={PassWord}
+                                onChange={(e) => setPassWord(e.target.value)}
                                 placeholder="What's the secret word ?"
                                 className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
                             />
 
-                            <button className="my-3 block w-max py-3 px-6 rounded-xl bg-red-600 hover:bg-red-100 focus:bg-red-200 active:bg-red-400">
+                            <button className="my-3 block w-max py-3 px-6 rounded-xl bg-red-600 hover:bg-red-100 focus:bg-red-200 active:bg-red-400"onClick={loginUser}>
                                 <span className="font-bold block w-max tracking-wide text-sm text-white">
                                     Login
                                 </span>
+                                
                             </button>
                         </div >
                         <div className='mt-12 grid sm:grid-cols-2 gap-7'>
