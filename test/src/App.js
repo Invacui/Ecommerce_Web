@@ -8,8 +8,8 @@ import Footer from './components/Footer';
 import ProductM from './moduels/ProductsM';
 import Signup from './moduels/SIGNUP';
 import Cart from './moduels/Cart';
+import Logout from './moduels/LOGOUT/Logout'
 import { useLocation } from 'react-router-dom';
-import {  useNavigate } from 'react-router-dom';
 function App() {
   const [refreshHeader, setRefreshHeader] = useState(false);
 
@@ -44,6 +44,8 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/product" element={<ProductM />} />
           <Route path="/cart-details" element={<Cart />} />
+          <Route path="/logout" element={<Logout />} />
+          
           <Route path="*" element={<div>404</div>} />
         </Routes>
         <Footer /> 

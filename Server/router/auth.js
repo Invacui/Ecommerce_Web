@@ -89,14 +89,14 @@ router.post('/login', async(req, res)=>{
  router.get('/DATAFEndpoint',authenticate, (req, res) => {
     res.send(req.rootUser);
   });
-{/* 
+
 //Logout endpoint
-router.get('/Logout', (req, res) => {
+router.get('/logout', (req, res) => {
     console.log('Logout Page In Action...');
     res.clearCookie('jwtoken',{path : '/'}); //clear cookie and redirect to /
     res.status(200).send('User Logged Out');
   });
-*/}
+
 module.exports = router;
 
 /*//Login Route

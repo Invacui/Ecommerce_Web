@@ -25,8 +25,11 @@ const Header = () => {
   const handleLogin = () => {
     Nav('/login');
   };
-  const handleLogin1 = () => {
-    Nav('/signup');
+  const handleLogout = () => {
+    Nav('/logout');
+  };
+  const handleCart = () => {
+    Nav('/cart-details');
   };
 
   return (
@@ -53,7 +56,7 @@ const Header = () => {
 
         </nav>
 
-        <button className="ml-2 mr-2 inline-flex items-center bg-yellow-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
+        <button className="ml-2 mr-2 inline-flex items-center bg-yellow-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0" onClick={handleCart}>
           <strong>Cart</strong>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +94,7 @@ const Header = () => {
           </button> */}
 
 
-          <button className="ml-2 mr-2 inline-flex items-center bg-yellow-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 "onClick={fname ? handleLogin1 : handleLogin}>
+          <button className="ml-2 mr-2 inline-flex items-center bg-yellow-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0 "onClick={fname ? handleLogin : handleLogout }>
             <strong>{fname ? fname : 'Login/SignUp'}</strong>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-1">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -110,7 +113,7 @@ const Header = () => {
           </button>
 
         {fname && (
-          <button className="ml-2 mr-2 inline-flex items-center bg-yellow-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0" onClick={handleLogin1}>
+          <button className="ml-2 mr-2 inline-flex items-center bg-yellow-300 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0" onClick={handleLogout}>
             <strong>Logout</strong>
             
             <svg
@@ -132,7 +135,7 @@ const Header = () => {
 };
 
 export default Header;
-// import React, { useEffect, useState } from 'react';
+
 // import { useNavigate } from 'react-router-dom';
 // import getdata from '../API/getdata';
 
