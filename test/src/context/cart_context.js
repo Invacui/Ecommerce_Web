@@ -1,10 +1,21 @@
-import React, { useContext, useReducer, createContext } from 'react';
+import React, { useContext, useReducer, createContext, useEffect } from 'react';
 import CartReducer from './reducer/cart_reducer';
 
 const CartContext = createContext();
 
+const getLocalCartData = () => {
+  try {
+    const localCartData = localStorage.getItem("StoreCart");
+    return localCartData ? JSON.parse(localCartData) : [];
+  } catch (error) {
+    console.error("Error parsing local storage data:", error);
+    return [];
+  }
+};
+
+
 const initialState = {
-  cart: [],
+  cart: getLocalCartData(),
   total_item: 0,
 };
 
@@ -31,6 +42,11 @@ export const Cart_provider = ({ children }) => {
   const handleItemChange = (id, item) => {
     dispatch({ type: 'HANDLE_ITEM_CHANGE', payload: { id, item } });
   };
+
+  useEffect(() => {
+    localStorage.setItem("StoreCart", JSON.stringify(state.cart));
+  }, [state.cart]);
+  
 
   return (
     <CartContext.Provider
