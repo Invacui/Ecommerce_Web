@@ -21,13 +21,23 @@ const initialState = {
 
 export const Cart_provider = ({ children }) => {
   const [state, dispatch] = useReducer(CartReducer, initialState);
-
+  
   const addToCart = (id, category, name, price, image, item) => {
+    
+    const existingItemIndex = state.cart.findIndex((item) => item.id === id);
     console.log("increase_item_triggred1");
+    if (existingItemIndex !== -1) 
+    {
+        dispatch({
+        type: 'ADD_TO_CART',
+        payload: { id, category, name, price, image, item },
+        });
+  } else {
     dispatch({
       type: 'ADD_TO_CART',
-      payload: { id, category, name, price, image, item },
-    });
+      payload: { id, category, name, price, image, item },});
+      dispatch({ type: 'INCREASE_ITEM_QUANTITY', payload: id });
+    }
   };
 
   const increaseItemQuantity = (id) => {
@@ -38,16 +48,19 @@ export const Cart_provider = ({ children }) => {
   const decreaseItemQuantity = (id) => {
     dispatch({ type: 'DECREASE_ITEM_QUANTITY', payload: id });
   };
-
   const handleItemChange = (id, item) => {
     dispatch({ type: 'HANDLE_ITEM_CHANGE', payload: { id, item } });
   };
+  const handleRemoveItem = (id) => {
+    dispatch({ type: 'REMOVE_ITEM', payload: id });
+  };
+
 
   useEffect(() => {
     localStorage.setItem("StoreCart", JSON.stringify(state.cart));
   }, [state.cart]);
-  
-
+        // Calculate total quantity
+        
   return (
     <CartContext.Provider
       value={{
@@ -57,6 +70,7 @@ export const Cart_provider = ({ children }) => {
         increaseItemQuantity,
         decreaseItemQuantity,
         handleItemChange,
+        handleRemoveItem,
       }}
     >
       {children}

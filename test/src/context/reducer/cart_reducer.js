@@ -9,7 +9,7 @@ const CartReducer = (state, action) => {
         name: item.name,
         price: item.price,
         image: item.image,
-        countI: countI || 1,
+        countI: countI || 0,
         item,
       };
   
@@ -20,13 +20,17 @@ const CartReducer = (state, action) => {
       } else {
         state.cart.push(cartProduct);
       }
-  
       const totalQuantity = state.cart.reduce((total, item) => total + item.countI, 0);
-  
+
       return {
         ...state,
+        cart: [...state.cart], // ensure cart is always an array
         total_item: totalQuantity,
+        
       };
+    
+  
+    
     } else if (action.type === "INCREASE_ITEM_QUANTITY") {
         const  id  = action.payload;
         return {
@@ -43,7 +47,7 @@ const CartReducer = (state, action) => {
             }
             return item;
           }),
-          
+          total_item: state.total_item + 1
         };
       } else if (action.type === "DECREASE_ITEM_QUANTITY") {
         const id  = action.payload;
@@ -59,25 +63,19 @@ const CartReducer = (state, action) => {
             }
             return item;
           }),
+          total_item: state.total_item - 1
         };
       
-    } else if (action.type === "HANDLE_ITEM_CHANGE") {
-      const { id, item } = action.payload;
-  
+    } else if (action.type === "REMOVE_ITEM") {
+      const id = action.payload;
       return {
         ...state,
-        cart: state.cart.map((item) => {
-          if (item.id === id) {
-            return {
-              ...item,
-              countI: item,
-            };
-          }
-          return item;
-        }),
+        cart: state.cart.filter((item) => item.id !== id),
+        total_item: state.total_item - 1, // Decrement the total_item by 1
       };
     }
     
+
       return state;
     };
   
