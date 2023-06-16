@@ -10,6 +10,7 @@ const CartReducer = (state, action) => {
         price: item.price,
         image: item.image,
         countI: countI || 0,
+        //totalQuantity: totalQuantity || 0,
         item,
       };
   
@@ -18,19 +19,27 @@ const CartReducer = (state, action) => {
       if (existingItemIndex !== -1) {
         state.cart[existingItemIndex].countI += 1;
       } else {
-        state.cart.push(cartProduct);
+        state.cart.push(cartProduct); 
       }
-      const totalQuantity = state.cart.reduce((total, item) => total + item.countI, 0);
-
+      
+      let totalQuantity = state.cart.reduce((total, item) => total + item.countI, 0);
+      //Unique_product_quant_measure
+      const uniqueProducts = state.cart.reduce((products, item) => {
+        if (!products.includes(item.id)) {
+          products.push(item.id);
+        }
+        return products;
+      }, []);
+      const totalCartProducts = uniqueProducts.length;
+      
       return {
         ...state,
-        cart: [...state.cart], // ensure cart is always an array
+        cart: [...state.cart],
         total_item: totalQuantity,
-        
+        total_cart_product: totalCartProducts,
       };
-    
   
-    
+/*====================End of ADD TO CART===================== */    
     } else if (action.type === "INCREASE_ITEM_QUANTITY") {
         const  id  = action.payload;
         return {
@@ -41,13 +50,15 @@ const CartReducer = (state, action) => {
               console.log(`CartCartuCaru=> ${item.countI}`);
               return {
                 ...item,
-                countI: item.countI + 1, // Increment countI by 1
+                countI: item.countI + 1, // Increment countI by 1 for existing item
+                
               };
               
             }
             return item;
           }),
-          total_item: state.total_item + 1
+          total_item: state.total_item + 1,
+          
         };
       } else if (action.type === "DECREASE_ITEM_QUANTITY") {
         const id  = action.payload;
@@ -63,7 +74,7 @@ const CartReducer = (state, action) => {
             }
             return item;
           }),
-          total_item: state.total_item - 1
+          total_item: state.total_item + 1,
         };
       
     } else if (action.type === "REMOVE_ITEM") {
@@ -71,13 +82,14 @@ const CartReducer = (state, action) => {
       return {
         ...state,
         cart: state.cart.filter((item) => item.id !== id),
-        total_item: state.total_item - 1, // Decrement the total_item by 1
+        total_item: state.total_item * 0, // Decrement the total_item by 1
       };
     }
     
 
-      return state;
-    };
+    return state;
+      
+  };
   
   export default CartReducer;
 

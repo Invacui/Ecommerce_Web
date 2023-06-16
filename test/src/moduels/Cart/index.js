@@ -39,7 +39,7 @@ const handleReVisit = (id) =>{
   Nav(`/item-details/${id}`)
 }
 
-  const { cart, increaseItemQuantity, decreaseItemQuantity, handleItemChange,handleRemoveItem,total_item } = useCartContext();
+  const { cart, increaseItemQuantity, decreaseItemQuantity, handleItemChange,handleRemoveItem,total_item,total_cart_product } = useCartContext();
   const subtotal = cart.reduce((total, item) => total + (item.price * item.countI), 0);
   let shippingprice = total_item == 0 ? 0:4.99;
 
@@ -48,7 +48,7 @@ const handleReVisit = (id) =>{
   return (
     
     <div className="h-screen bg-gray-100 pt-20">
-      <h1>Cart Items</h1>
+      <h1>Cart Items:{total_cart_product}</h1>
       <p>Total Items: {total_item}</p>
       <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
       <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0">

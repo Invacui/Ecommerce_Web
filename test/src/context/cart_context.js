@@ -16,7 +16,9 @@ const getLocalCartData = () => {
 
 const initialState = {
   cart: getLocalCartData(),
-  total_item: 0,
+  total_item: parseInt(localStorage.getItem("total_item")) || 0,
+  total_cart_product: parseInt(localStorage.getItem("total_cart_product")) || 0,
+
 };
 
 export const Cart_provider = ({ children }) => {
@@ -58,7 +60,9 @@ export const Cart_provider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("StoreCart", JSON.stringify(state.cart));
-  }, [state.cart]);
+    localStorage.setItem("total_cart_product", state.total_cart_product.toString());
+    localStorage.setItem("total_item", state.total_item.toString()); // Store total_item in local storage
+  }, [state.cart, state.total_cart_product, state.total_item]);
         // Calculate total quantity
         
   return (
@@ -66,6 +70,7 @@ export const Cart_provider = ({ children }) => {
       value={{
         cart: state.cart,
         total_item: state.total_item,
+        total_cart_product: state.total_cart_product,
         addToCart,
         increaseItemQuantity,
         decreaseItemQuantity,
