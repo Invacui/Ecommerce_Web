@@ -12,6 +12,8 @@ import Logout from './moduels/LOGOUT/Logout'
 import { useLocation } from 'react-router-dom';
 function App() {
   const [refreshHeader, setRefreshHeader] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   // Custom hook to listen for route changes
   const useRouteChange = () => {
@@ -36,7 +38,8 @@ function App() {
   return (
     <div className='text-grey-600'>
       {refreshHeader && <Header />}
-        
+      {!isHomePage && <Header />}
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/item-details/:itemId" element={<ProductM />} />
@@ -45,7 +48,6 @@ function App() {
           <Route path="/product" element={<ProductM />} />
           <Route path="/cart-details" element={<Cart />} />
           <Route path="/logout" element={<Logout />} />
-          
           <Route path="*" element={<div>404</div>} />
         </Routes>
         <Footer /> 

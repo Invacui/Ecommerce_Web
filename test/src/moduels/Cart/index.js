@@ -62,7 +62,7 @@ const handleReVisit = (id) =>{
                   <p className="mt-1 text-xs text-gray-700">{item.category}</p>
                 </div>
                 <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
-                  <div className="flex items-center border-gray-100">
+                  <div className="flex justify-end border-gray-100">{}
                     <span
                       className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50"
                       onClick={() => {
@@ -127,6 +127,11 @@ const handleReVisit = (id) =>{
           <div className="flex justify-between">
             <p className="text-gray-700">Shipping</p>
             <p className="text-gray-700">{shippingprice}</p>
+          </div>
+           
+          <div className="py-2 mb-2 flex justify-between">
+            <p className="text-gray-700">Total Items</p>
+            <p className="text-gray-700">{total_item}</p>
           </div>
           <hr className="my-4" />
           <div className="flex justify-between">
