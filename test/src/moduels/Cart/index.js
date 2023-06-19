@@ -1,50 +1,61 @@
-import React ,{useEffect} from 'react';
+import React ,{useEffect,useState} from 'react';
 import { useCartContext } from '../../context/cart_context';
 import {  useNavigate } from "react-router-dom";
-
+import { initiateRazorpayPayment, loadRazorpayScript } from '../../components/razorpayUtils';
 const Cart = () => {
-  
   const Nav = useNavigate();
-  const callCartPage = async() =>{
-    try { 
-      const res = await fetch('/DATAFEndpoint',{
-        method:"GET",
-        headers:{
-          Accept:"applications/json",
-          "Content-Type": "application/json"
-        },
-        credentials : "include"
-      });
-      console.log('This is Response==>',res);
-      const data = await res.json();
-      console.log('This is DATA==>',data);
-      console.log('This is fname::',data.fname);
+  const [email, setEmail] = useState('');
+  const { cart, increaseItemQuantity, decreaseItemQuantity, handleItemChange, handleRemoveItem, total_item, total_cart_product } =
+    useCartContext();
+  const subtotal = cart.reduce((total, item) => total + item.price * item.countI, 0);
+  let shippingprice = total_item === 0 ? 0 : 4.99;
 
-      if(!res.status === 200){
+  const callCartPage = async () => {
+    try {
+      const res = await fetch('/DATAFEndpoint', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+      console.log('This is Response==>', res);
+      const data = await res.json();
+      console.log('This is DATA==>', data);
+      console.log('This is fname::', data.fname);
+      setEmail(data.email);
+      if (!res.status === 200) {
         const error = new Error(res.Error);
         throw error;
       }
-
     } catch (err) {
       console.log(err);
       Nav('/login');
     }
-  }
+  };
 
   useEffect(() => {
     callCartPage();
   }, []);
 
-const handleReVisit = (id) =>{
-  Nav(`/item-details/${id}`)
-}
+  const handleClick = () => {
+    initiateRazorpayPayment({
+      email: email,
+      contact: '9873264404',
+    });
+  };
 
-  const { cart, increaseItemQuantity, decreaseItemQuantity, handleItemChange,handleRemoveItem,total_item,total_cart_product } = useCartContext();
-  const subtotal = cart.reduce((total, item) => total + (item.price * item.countI), 0);
-  let shippingprice = total_item == 0 ? 0:4.99;
+  useEffect(() => {
+    loadRazorpayScript();
+  }, []);
 
-  console.log(
-    "🚀 Winner Winner Bigger Dinner",cart)
+  const handleReVisit = (id) => {
+    Nav(`/item-details/${id}`);
+  };
+
+  console.log('🚀 Winner Winner Bigger Dinner', cart);
+
   return (
     
     <div className="h-screen bg-gray-100 pt-20">
@@ -141,7 +152,7 @@ const handleReVisit = (id) =>{
               <p className="text-sm text-gray-700">including VAT</p>
             </div>
           </div>
-          <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
+          <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"onClick = {() =>handleClick()}>
             Check out
           </button>
         </div>

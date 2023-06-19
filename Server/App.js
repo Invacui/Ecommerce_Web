@@ -2,10 +2,13 @@ const express = require('express');
 const dotenv = require("dotenv");
 const App = express();
 const cookieParser = require("cookie-parser");
-
 require('./DB/conn');
 App.use(express.json());
 App.use(cookieParser());
+const paymentRoute = require('./razor');
+
+App.use('/payment', paymentRoute);
+
 
 // Middleware
 const middleware = (req, res, next) => {
