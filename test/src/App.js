@@ -10,7 +10,6 @@ import Signup from './moduels/SIGNUP';
 import Cart from './moduels/Cart';
 import Logout from './moduels/LOGOUT/Logout'
 import { useLocation } from 'react-router-dom';
-import RazorpayButton from './components/razorpay';
 function App() {
   const [refreshHeader, setRefreshHeader] = useState(false);
   const location = useLocation();
@@ -51,7 +50,6 @@ function App() {
           <Route path="/product" element={<ProductM />} />
           <Route path="/cart-details" element={<Cart />} />
           <Route path="/logout" element={<Logout />} />
-          <Route path="/Razor" element={<RazorpayButton/>}/>
           <Route path="*" element={<div>404</div>} />
         </Routes>
         <Footer /> 

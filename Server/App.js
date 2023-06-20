@@ -1,14 +1,13 @@
 const express = require('express');
 const dotenv = require("dotenv");
-const App = express();
+const app = express();
 const cookieParser = require("cookie-parser");
 require('./DB/conn');
-App.use(express.json());
-App.use(cookieParser());
-const paymentRoute = require('./razor');
+app.use(express.json());
+app.use(cookieParser());
+const razorRouter = require('./razor');
 
-App.use('/payment', paymentRoute);
-
+app.use('/create-order', razorRouter);
 
 // Middleware
 const middleware = (req, res, next) => {
@@ -16,36 +15,34 @@ const middleware = (req, res, next) => {
   next();
 };
 
-App.use(middleware);
+app.use(middleware);
 
 // Routes
-App.use(require('./router/auth'));
+app.use(require('./router/auth'));
 
-// App.get('/', (req, res) => {
-//   console.log(`${req.cookies.jwtoken}`);
-//   res.send(`Hello world from the server`);
-// }); 
+app.get('/', (req, res) => {
+  res.send(`Hello world from the server`);
+});
 
-App.get('/',(req,res) => {
-    
-  res.send(`PHello world from the server`);
-}); 
+app.get('/cart-detail', (req, res) => {
+  res.send('Hello, this is the cart detail page');
+});
 
-App.get('/login', (req, res) => {
+app.get('/login', (req, res) => {
   res.send(`Hello world from the server`);
   console.log('fick off');
 });
 
-App.get('/signup', (req, res) => {
+app.get('/signup', (req, res) => {
   res.send(`Hello world from the server`);
   console.log('Fuck off');
 });
 
-App.get('/ProductM', (req, res) => {
+app.get('/ProductM', (req, res) => {
   res.send(`Hello world from the server`);
 });
 
 const PORT = process.env.PORT;
-App.listen(PORT, () => {
-  console.log(`Subscribe to M on ==>${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

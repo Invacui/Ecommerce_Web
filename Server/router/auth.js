@@ -4,7 +4,7 @@ const Bcrypt = require(`bcrypt`);
 const router = express.Router();
 require('../DB/conn');
 const authenticate = require("../middleware/authenticate");
-const paymentController = require('../middleware/paymentController');
+
 const User = require("../model/User");
 
 router.get('/',(req,res) =>{
@@ -83,8 +83,6 @@ router.post('/login', async(req, res)=>{
 });
 
 
-// Handle the create order route
-router.post('/create-order', paymentController.createOrder);
 
 //Verify before using page that the user is logged in or not by creating endpoints
 

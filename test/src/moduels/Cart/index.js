@@ -1,15 +1,19 @@
 import React ,{useEffect,useState} from 'react';
 import { useCartContext } from '../../context/cart_context';
 import {  useNavigate } from "react-router-dom";
-import { initiateRazorpayPayment, loadRazorpayScript } from '../../components/razorpayUtils';
+import { initiateRazorpayPayment, loadRazorpayScript } from '../../components/API/RazorPayAPI/razorpayUtils';
 const Cart = () => {
-  const Nav = useNavigate();
-  const [email, setEmail] = useState('');
+  
+//=========================================================================================>>Cart Context
   const { cart, increaseItemQuantity, decreaseItemQuantity, handleItemChange, handleRemoveItem, total_item, total_cart_product } =
-    useCartContext();
+  useCartContext();
+  const Nav = useNavigate();
+//=========================================================================================>>Variables
+  const [email, setEmail] = useState('');
   const subtotal = cart.reduce((total, item) => total + item.price * item.countI, 0);
   let shippingprice = total_item === 0 ? 0 : 4.99;
-
+  let total_price = 10000.00;
+//=========================================================================================>>Get User Loggin Data
   const callCartPage = async () => {
     try {
       const res = await fetch('/DATAFEndpoint', {
@@ -38,17 +42,21 @@ const Cart = () => {
   useEffect(() => {
     callCartPage();
   }, []);
+//=========================================================================================>>Init Payment 
 
   const handleClick = () => {
     initiateRazorpayPayment({
       email: email,
       contact: '9873264404',
+      totalPrice: total_price ,
+     // orderId: 'order_M48bFcOUrjNsqK',
     });
   };
 
   useEffect(() => {
     loadRazorpayScript();
   }, []);
+//=========================================================================================>>Visit Back to the Item
 
   const handleReVisit = (id) => {
     Nav(`/item-details/${id}`);
@@ -148,7 +156,7 @@ const Cart = () => {
           <div className="flex justify-between">
             <p className="text-lg font-bold">Total</p>
             <div className="">
-              <p className="mb-1 text-lg font-bold">${(subtotal+ shippingprice).toFixed(2)}</p>
+              <p className="mb-1 text-lg font-bold" value={total_price} >${total_price = (subtotal + shippingprice).toFixed(2)}</p>
               <p className="text-sm text-gray-700">including VAT</p>
             </div>
           </div>
