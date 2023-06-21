@@ -9,6 +9,11 @@ const SignUp = () => {
     const [CPass,setCPass]= useState('');
     const [Phone,setPhone]= useState('');
 
+const passwordMatch = PassWord === CPass;
+const passwordStrength = calculatePasswordStrength(PassWord);
+
+
+
     const SignupFn = async (e) =>{
         e.preventDefault();
         console.log('SignupFn function called');
@@ -33,6 +38,15 @@ const SignUp = () => {
         navigate('/login');
       }
     }
+    
+    const handlePhoneChange = (e) => {
+        const input = e.target.value;
+        // Remove any non-digit characters
+        const sanitizedInput = input.replace(/\D/g, '');
+        // Limit the input to 10 digits
+        const truncatedInput = sanitizedInput.slice(0, 10);
+        setPhone(truncatedInput);
+      };
     return (
         <div className="container m-auto overflow-hidden">
             <div hidden="" className="fixed inset-0 w-7/12 lg:block">
@@ -111,31 +125,54 @@ const SignUp = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
-                        <div>
-                            <input
-                                type="number"
+                        <div >
+                            <div className="pb-3 relative">
+                                <div className=" pb-3 absolute left-0 top-0 flex items-center h-full pl-2 pointer-events-none">
+                                <span className="mr-1">+91</span>
+                                </div>
+                                <input
+                                type="tel"
                                 placeholder="Your Phone"
                                 value={Phone}
-                                className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
-                                onChange={(e) => setPhone(e.target.value)}
-                            />
-                        </div>
-                        <input
+                                className="w-full py-3 px-6 pl-12 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
+                                onChange={handlePhoneChange}
+                                />
+                            </div>
+                            <div classname ="py-3">
+                            <div className="py-3 flex flex-col items-start relative">
+                                <input
                                 type="password"
                                 value={PassWord}
                                 onChange={(e) => setPassWord(e.target.value)}
                                 placeholder="Enter the Password"
                                 className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
-                            />
-                        <div className="flex flex-col items-start">
-                            <input
+                                />
+                                {PassWord&&<span
+                                className={`absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-600 ${
+                                    passwordStrength === 'Weak' ? 'text-red-500': passwordStrength === 'Medium' ? 'text-yellow-500' : 'text-green-500'
+                                }`}
+                                >{passwordStrength}
+                                </span>}
+                            </div>
+                            </div>
+                            <div classname ="py-3">
+                            <div className="py-3 flex flex-col items-start relative">
+                                <input
                                 type="password"
                                 value={CPass}
                                 onChange={(e) => setCPass(e.target.value)}
                                 placeholder="Enter Confirm Password"
                                 className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
-                            />
-
+                                />
+                            {CPass&&<span
+                            className={`absolute right-6 top-1/2 transform -translate-y-1/2 ${
+                                passwordMatch ? 'text-green-500' : 'text-red-500'
+                            }`}
+                            >
+                            {passwordMatch ? 'Matching' : 'Not Matching'}
+                            </span>}
+                            </div>
+                            </div>
                             <button className="my-3 block w-max py-3 px-6 rounded-xl bg-red-600 hover:bg-red-100 focus:bg-red-200 active:bg-red-400"onClick={SignupFn}>
                                 <span className="font-bold block w-max tracking-wide text-sm text-white">
                                     Sign Up
@@ -163,6 +200,17 @@ const SignUp = () => {
         </div>
 
     )
+    
 }
+// Helper function to calculate the password strength (example implementation)
+const calculatePasswordStrength = (password) => {
+    if (password.length < 6) {
+      return 'Weak';
+    } else if (password.length < 10) {
+      return 'Medium';
+    } else {
+      return 'Strong';
+    }
+  };
 
 export default SignUp
