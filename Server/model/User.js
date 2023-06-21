@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({ //structure of the doc
     type: String,
     required: true,
   },
+  Phone: {
+    type: String,
+    required: true,
+  },
   tokens: [{
     token: {
       type: String,

@@ -13,8 +13,8 @@ router.get('/',(req,res) =>{
 
 router.post('/signup' ,(req,res) =>{
     let token;
-    const {fname,email,PassWord,CPass}= req.body;
-   if(!fname || !email || !PassWord || !CPass){
+    const {fname,email,PassWord,CPass,Phone}= req.body;
+   if(!fname || !email || !PassWord || !CPass || !Phone){
     return res.status(422).json({ error : "Please Fill the Empty Feild."});
    }//422 Error express that every thing is right but the client has made some mistake aka not filling the data.
     
@@ -27,7 +27,7 @@ router.post('/signup' ,(req,res) =>{
     if(PassWord != CPass){
         return res.status(422).json({ error : "Password Is Not Matching. Try Again"});
     }else{
-    const user = new User({fname,email,PassWord,CPass}) //If doesn't exist then create one.
+    const user = new User({fname,email,PassWord,CPass,Phone}) //If doesn't exist then create one.
     user.save().then(() =>{
         res.status(201).json({message: "user register successfully" +`${user}`});
     

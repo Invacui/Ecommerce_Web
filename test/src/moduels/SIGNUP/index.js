@@ -7,6 +7,7 @@ const SignUp = () => {
     const [PassWord,setPassWord]= useState('');
     const [fname,setfname]= useState('');
     const [CPass,setCPass]= useState('');
+    const [Phone,setPhone]= useState('');
 
     const SignupFn = async (e) =>{
         e.preventDefault();
@@ -17,17 +18,17 @@ const SignUp = () => {
                 "Content-Type" : "application/json"
             },
             body:JSON.stringify({
-                    email,PassWord,fname,CPass,
+                    email,PassWord,fname,CPass,Phone,
             }),
         });
         
         const data = await res.json();
 
       if (res.status === 400 || !data) {
-        window.alert('Login Failed');
+        window.alert('SignUp Failed');
         console.log('Opps! Failed to SignUp');
       } else {
-        window.alert('Login Successful');
+        window.alert('SignUp Successful');
         console.log('Success! SignUp');
         navigate('/login');
       }
@@ -108,6 +109,15 @@ const SignUp = () => {
                                 value={email}
                                 className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
                                 onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <input
+                                type="number"
+                                placeholder="Your Phone"
+                                value={Phone}
+                                className="w-full py-3 px-6 ring-2 ring-red-400 rounded-xl placeholder-gray-600 bg-transparent transition disabled:ring-gray-200 disabled:bg-gray-100 disabled:placeholder-gray-400 invalid:ring-red-400 focus:invalid:outline-none"
+                                onChange={(e) => setPhone(e.target.value)}
                             />
                         </div>
                         <input
