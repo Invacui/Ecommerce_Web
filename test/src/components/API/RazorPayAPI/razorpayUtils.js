@@ -9,20 +9,22 @@ export const initiateRazorpayPayment = async (data) => {
     method: 'POST',
     body: JSON.stringify({
       amount: data.totalPrice.replace('.', ''),
-      email: data.email,
+      //email: data.email,
     contact: data.contact,
     contact1: data.totalPrice,
+    username:data.User_Name,
+    db_id: data.db_id, // Include db_id as a parameter
     }),
     headers: {
       'Content-Type': 'application/json',
     },
   });
-
+  console.log('Razorpay order creation response:', response);
   const responseData = await response.json();
   const orderId = responseData.orderId; // Retrieve the generated order ID
 
   console.log("Order ID:", orderId);
-
+  console.log("DB ID:", data.db_id); // Log the db_id
   if (window.Razorpay) {
     const options = {
       key: 'rzp_test_aHOdspgUyROspi',
@@ -31,6 +33,7 @@ export const initiateRazorpayPayment = async (data) => {
       name: 'Shop Now',
       description: 'Payment for your order',
       image: Logo,
+      db_id:responseData.db_id,
       order_id: orderId, // Use the generated order ID
       handler: function (response) {
         console.log("This is resp>>",response);
@@ -38,6 +41,15 @@ export const initiateRazorpayPayment = async (data) => {
       prefill: {
         email: data.email,
         contact: data.contact,
+        username:data.User_Name,
+        db_id:data.db_id,
+      },
+      notes: {
+        orderI:responseData.db_id,
+       username : data.User_Name
+      },
+      db_id: {
+        db_id:responseData.db_id
       },
     };
 
