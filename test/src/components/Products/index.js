@@ -2,94 +2,64 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as productImage from '../../Drawables/Products/';
 import { items } from './items'; // Import the items array
+import { calculateTotalPages, calculatePageRange } from './Utils/paginationUtils';
+import { sortByLowToHigh, sortByHighToLow,sortItemsAscending,sortItemsDescending } from './Utils/filterUtils';
 
-const itemsPerPage = 8; // Number of items to display per page
+const itemsPerPage = 4;
 
 const Product = () => {
-  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterOption, setFilterOption] = useState('');
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(items.length / itemsPerPage);
+  // Calculate total pages and page range
+  const totalPages = calculateTotalPages(itemsPerPage, items.length);
+  const { startPage, endPage } = calculatePageRange(currentPage, totalPages);
 
-  // Calculate the start and end page numbers to display
-  let startPage, endPage;
-  if (currentPage <= 3) {
-    startPage = 1;
-    endPage = Math.min(totalPages, 3);
-  } else if (currentPage + 1 >= totalPages) {
-    startPage = Math.max(totalPages - 2, 1);
-    endPage = totalPages;
-  } else {
-    startPage = currentPage - 1;
-    endPage = currentPage + 1;
-  }
+  // Get current items based on the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = items.slice(startIndex, endIndex);
 
   // Handle pagination button clicks
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Get the items to display on the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = items.slice(startIndex, endIndex);
+  // Handle filter option change
+  const handleFilterChange = (event) => {
+    const selectedOption = event.target.value;
+    setFilterOption(selectedOption);
 
-  // Render pagination buttons
-  const renderPaginationButtons = () => {
-    const buttons = [];
-
-    // Previous button
-    if (startPage > 1) {
-      buttons.push(
-        <button
-          key="previous"
-          className="mx-2 px-4 py-2 text-2xl flex rounded-full bg-yellow-300 text-black-500 font-extrabold"
-          onClick={() => handlePageChange(startPage - 1)}
-        >         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z" />
-          </svg>
-
-
-        </button>
-      );
+    // Perform filtering based on selected option
+    if (selectedOption === 'A-Z') {
+      const sortedItems = sortItemsAscending(items);                                                     // Sort items by name in ascending order
+                                                              // Update the items array with sorted items or use it in further calculations
+    } else if (selectedOption === 'Z-A') {
+      const sortedItems = sortItemsDescending(items); 
+    } else if (selectedOption === 'Low-High') {
+      const sortedItems = sortByLowToHigh(items);
+    } else if (selectedOption === 'High-Low') {
+      const sortedItems = sortByHighToLow(items); 
     }
-
-    // Page buttons
-    for (let i = startPage; i <= endPage; i++) {
-      buttons.push(
-        <button
-          key={i}
-          className={`mx-2 px-4 py-2 rounded-lg ${currentPage === i ? "bg-red-500 text-white" : "bg-gray-300 text-gray-600"
-            }`}
-          onClick={() => handlePageChange(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    // Next button
-    if (endPage < totalPages) {
-      buttons.push(
-        <button
-          key="next"
-          className="mx-2 px-4 py-2 text-2xl flex rounded-full bg-yellow-300 text-black-500 font-extrabold"
-          onClick={() => handlePageChange(endPage + 1)}
-        >
-         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z" />
-</svg>
-
-        </button>
-      );
-    }
-
-    return buttons;
   };
 
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-0 py-24 mx-auto">
+        {/* Filter dropdown menu */}
+        <div className="flex justify-end mt-4 pb-8">
+          <select
+            value={filterOption}
+            onChange={handleFilterChange}
+            className="px-4 py-2 rounded bg-gray-300 text-gray-600"
+          >
+            <option value="">Filter</option>
+            <option value="A-Z">Sort A-Z</option>
+            <option value="Z-A">Sort Z-A</option>
+            <option value="Low-High">Price Low to High</option>
+            <option value="High-Low">Price High to Low</option>
+          </select>
+        </div>
         <div className="flex flex-wrap -m-4">
           {/* Map over the currentItems array */}
           {currentItems.map((item) => (
@@ -107,7 +77,42 @@ const Product = () => {
         </div>
         {/* Pagination buttons */}
         <div className="flex justify-center mt-8">
-          {renderPaginationButtons()}
+          {/* Previous button */}
+          {startPage > 1 && (
+            <button
+            className="mx-2 px-4 py-2 text-2xl flex rounded-full bg-yellow-300 text-black-500 font-extrabold"
+            onClick={() => handlePageChange(startPage - 1)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z" />
+          </svg>
+            </button>
+          )}
+
+          {/* Page buttons */}
+          {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((page) => (
+            <button
+              key={page}
+              className={`mx-2 px-4 py-2 rounded-full ${
+                currentPage === page ? "bg-red-400 text-white" : "bg-gray-300 text-gray-600"
+              }`}
+              onClick={() => handlePageChange(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+          {/* Next button */}
+          {endPage < totalPages && (
+            <button
+            className="mx-2 px-4 py-2 text-2xl flex rounded-full bg-yellow-300 text-black-500 font-extrabold"
+            onClick={() => handlePageChange(endPage + 1)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z" />
+</svg>
+            </button>
+          )}
         </div>
       </div>
     </section>
